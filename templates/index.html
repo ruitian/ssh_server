@@ -1,18 +1,42 @@
 <html>
     <head>
         <title>首页</title>
+        <link href="{{url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
     </head>
 <body>
-    <h1>Hello</h1>
-    <form method="post" action="">
-        <input type="text" name="name"/>
-        <input type="text" name="host"/>
-        <input type="password" name="passwd" />
-        <select name="cmd">
-            <option value="ls -a">查看</option>
-            <option value="uname -a">查看当前操作系统</option>
-        </select>
-        <button type="submit">提交</button>
-    </form>
+
+    <div class="container">
+        <div class="col-md-10">
+            <form method="post" action="">
+                <div class="form-group col-md-3">
+                    <label>登录名</label>
+                    <input class="form-control" type="text" name="name" required/>
+                </div>
+                <div class="form-group col-md-3">
+                    <label>主机地址</label>
+                    <input class="form-control" type="text" name="host" required/>
+                </div>
+                <div class="form-group col-md-2">
+                    <label>登录密码</label>
+                    <input class="form-control" type="password" name="passwd" required/>
+                </div>
+                <div class="form-group col-md-2">
+                    <label>操作命令</label>
+                    <select name="cmd" class="form-control">
+                        <option value="ls -a">查看</option>
+                        <option value="uname -a">查看当前操作系统</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-2">
+                    <button class="btn btn-default" type="submit">提交</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="container">
+        <div class="jumbotron">
+            {{ result }}
+        </div>
+    </div>
 </body>
 </html>

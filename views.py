@@ -13,5 +13,6 @@ def index():
         host = request.form['host']
         passwd = request.form['passwd']
         cmd = request.form['cmd']
-        return con.get_connect(name, host, passwd, cmd)
+        result = con.send_cmd(name, host, passwd, cmd)
+        return render_template('index.html', result=result)
     return render_template('index.html')
