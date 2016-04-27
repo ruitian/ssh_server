@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from ssh import app
+from app import app
 from views import *  # noqa
 
 if __name__ == '__main__':
