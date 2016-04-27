@@ -4,22 +4,19 @@ import pexpect
 
 class Connect():
 
-    def get_connect(self, name, host, passwd, cmd):
-        cmd = 'ssh -t ' + name + '@' + host + ' ' + '"' + cmd + '"'
+    def get_connect(self, name, host, passwd):
+
+        cmd = 'ssh -t ' + name + '@' + host
         ssh = pexpect.spawn(cmd)
         try:
-            flag = ssh.expect(['password:', 'continue connecting (yes/no)?'], timeout = 10)
+            flag = ssh.expect(
+                ['password:', 'continue connecting (yes/no)?'], timeout=5)
             if flag == 0:
-                ssh.sendline(passwd)
-                return ssh.read()
-
+                pexpect.run(cmd, events={'password:': passwd}, timeout=2)
             elif flag == 1:
-                ssh.sendline("yes")
+                ssh.sendline('yes')
                 flag = 0
-
-            return {
-                'flag': flag
-            }
+            return ssh
         except pexpect.EOF:
             print "EOF"
             ssh.close()
@@ -28,5 +25,10 @@ class Connect():
             print "TIMEOUT"
             ssh.close()
             ret = -2
-
         return ret
+
+    def send_cmd(self, name, host, passwd, cmd):
+        ssh = self.get_connect(name, host, passwd)
+        result = pexpect.run(cmd)
+        ssh.close()
+        return result
