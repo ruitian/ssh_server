@@ -58,6 +58,8 @@ def send_and_get(command):
 def get_server_info():
     new_disk_info = []
     new_device_info = []
+    new_ram_info = []
+    ram_infos = []
     disk_infos = []
     device_infos = []
 
@@ -66,6 +68,15 @@ def get_server_info():
         session['name'], session['host'], session['passwd'])
 
     # ram info
+    ram_info = serverInfo['ram_info']
+    for i in range(1, len(ram_info)-1):
+        new_ram_info.append(ram_info[i])
+    for s in new_ram_info:
+        one_info = s.strip('\n\t').split()
+        ram_infos.append(one_info)
+    ram_infos[1][1] = int(ram_infos[1][1]) / 1024
+    ram_infos[1][2] = int(ram_infos[1][2]) / 1024
+    ram_infos[1][3] = int(ram_infos[1][3]) / 1024
 
     # disk info
     disk_info = serverInfo['disk_info']
@@ -85,4 +96,4 @@ def get_server_info():
 
     return render_template(
         'index.html',
-        diskInfo=disk_infos, deviceInfo=device_infos)
+        diskInfo=disk_infos, ramInfo=ram_infos, deviceInfo=device_infos)
