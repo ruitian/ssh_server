@@ -1,50 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title></title>
-  <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.min.css')}}">
-</head>
-<body>
-    <div class="container"> <div class="col-md-10">
-            {% if session|length == 0 %}
-            <form method="post" action="{{url_for('connect')}}">
-                <div class="form-group col-md-3">
-                    <input class="form-control" type="text" name="name" required placeholder="登录名"/>
-                </div>
-                <div class="form-group col-md-3">
-                    <input class="form-control" type="text" name="host" required placeholder="主机地址"/>
-                </div>
-                <div class="form-group col-md-2">
-                    <input class="form-control" type="password" name="passwd" required placeholder="登录密码"/>
-                </div>
-                <div class="form-group col-md-2">
-                    <button class="btn btn-default" type="submit">连接</button>
-                </div>
-            </form>
-            {% endif %}
-            {% if session|length != 0 %}
-            <form action="{{url_for('deactive')}}" method="post">
-                <div class="form-group col-md-3">
-                    <input class="form-control" type="text" name="name" required placeholder="登录名" value="{{session['name']}}" disabled="true"/>
-                </div>
-                <div class="form-group col-md-3">
-                    <input class="form-control" type="text" name="host" required placeholder="主机地址" value="{{session['host']}}" disabled="true"/>
-                </div>
-                <div class="form-group col-md-2">
-                    <input class="form-control" type="password" name="passwd" required placeholder="登录密码" value="{{session['passwd']}}" disabled="true"/>
-                </div>
-                <div class="form-group col-md-2">
-                    <button class="btn btn-default" type="submit">断开连接</button>
-                </div>
-            </form>
-            {% endif %}
-        </div>
+{% extends "base.html" %}
+{% block title %}首页{% endblock %}
+
+{% block page_content %}
+<div class="row">
+    <div class="col-md-10">
+        {% if session|length == 0 %}
+        <form method="post" action="{{url_for('connect')}}">
+            <div class="form-group col-md-3">
+                <input class="form-control" type="text" name="name" required placeholder="登录名"/>
+            </div>
+            <div class="form-group col-md-3">
+                <input class="form-control" type="text" name="host" required placeholder="主机地址"/>
+            </div>
+            <div class="form-group col-md-2">
+                <input class="form-control" type="password" name="passwd" required placeholder="登录密码"/>
+            </div>
+            <div class="form-group col-md-2">
+                <button class="btn btn-default" type="submit">连接</button>
+            </div>
+        </form>
+        {% endif %}
+        {% if session|length != 0 %}
+        <form action="{{url_for('deactive')}}" method="post">
+            <div class="form-group col-md-3">
+                <input class="form-control" type="text" name="name" required placeholder="登录名" value="{{session['name']}}" disabled="true"/>
+            </div>
+            <div class="form-group col-md-3">
+                <input class="form-control" type="text" name="host" required placeholder="主机地址" value="{{session['host']}}" disabled="true"/>
+            </div>
+            <div class="form-group col-md-2">
+                <input class="form-control" type="password" name="passwd" required placeholder="登录密码" value="{{session['passwd']}}" disabled="true"/>
+            </div>
+            <div class="form-group col-md-2">
+                <button class="btn btn-default" type="submit">断开连接</button>
+            </div>
+        </form>
+        {% endif %}
     </div>
-    <div class="container">
-        <div class="jumbotron">
-            {{ result }}
+</div>
+<div class="row">
+    <div class="jumbotron">
+        {% if session|length != 0 %}
+        <div class="row">
+            <a href="" class="link"></a>
         </div>
+        {% endif %}
     </div>
-</body>
-</html>
+</div>
+{% endblock %}
