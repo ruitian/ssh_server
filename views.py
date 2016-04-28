@@ -25,7 +25,7 @@ def connect():
     if flag == 0:
         flash(u'连接失败，请检查您的输入', 'danger')
         return redirect(url_for('deactive'))
-    elif flag == -2 or flag == -1:
+    elif flag == 3 or flag == 4:
         flash(u'连接超时，请尝试重新连接', 'danger')
         return redirect(url_for('deactive'))
     else:
@@ -43,8 +43,46 @@ def deactive():
 
 @app.route('/<command>')
 def send_cmd(command):
-    pass
+    results = send_and_get(command)
+    return render_template('index.html', results=results)
 
 
 def send_and_get(command):
-    pass
+    con = Connect()
+    result = con.use_command(
+                session['name'], session['host'], session['passwd'], command)
+    return result
+
+
+@app.route('/server_info')
+def get_server_info():
+    new_disk_info = []
+    new_device_info = []
+    disk_infos = []
+    device_infos = []
+
+    con = Connect()
+    serverInfo = con.server_info(
+        session['name'], session['host'], session['passwd'])
+
+    # ram info
+
+    # disk info
+    disk_info = serverInfo['disk_info']
+    for i in range(2, len(disk_info)-1):
+        new_disk_info.append(disk_info[i])
+
+    for s in new_disk_info:
+        one_info = s.strip('\n\r').split()
+        disk_infos.append(one_info)
+
+    # device_info
+    device_info = serverInfo['device_info']
+    for i in range(1, len(device_info)-1):
+        new_device_info.append(device_info[i])
+    for s in new_device_info:
+        device_infos = s.strip('\r\n').split()
+
+    return render_template(
+        'index.html',
+        diskInfo=disk_infos, deviceInfo=device_infos)

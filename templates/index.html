@@ -39,11 +39,48 @@
     </div>
 </div>
 <div class="row">
-    <div class="jumbotron">
-        {% if session|length != 0 %}
-        <div class="row">
-            <a href="" class="link"></a>
-        </div>
+    {% if session|length != 0 %}
+    <div class="row">
+        <a href="{{url_for('get_server_info')}}" class="btn">服务器使用情况</a>
+        <a href="{{url_for('send_cmd', command='uname -a')}}" class="link">查看内核及系统版本</a>
+        <a href="{{url_for('send_cmd', command='ls -a')}}" class="link">查看所有文件</a>
+        <a href="{{url_for('send_cmd', command='df -h')}}" class="link">磁盘信息</a>
+        <a href="{{url_for('send_cmd', command='sudo service apache2 status')}}" class="link">重启apache2</a>
+    </div>
+    {% endif %}
+    {% if results %}
+        {% for result in results %}
+            {{ result }}<br>
+        {% endfor %}
+    {% endif %}
+
+</div>
+<div class="row">
+    <div class="col-md-4">
+    <h2>磁盘使用情况</h2>
+    {% if diskInfo %}
+        {% for infos in diskInfo %}
+        <strong>{{ infos[0] }}</strong>
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: {{ infos[4]}}">
+                    {{ infos[4] }}
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+    </div>
+    <div class="col-md-4">
+        <h2>内存使用情况</h2>
+    </div>
+    <div class="col-md-4">
+        <h2>系统状态</h2>
+        {% if deviceInfo %}
+            <p>当前时间:<b>{{ deviceInfo[0]}}</b></p>
+            <p>系统运行时间:<b>{{ deviceInfo[2]}}  {{ deviceInfo[3] }}  {{ deviceInfo[4]}}</b></p>
+            <p>当前在线用户:<b>{{ deviceInfo[5]}}</b></p>
+            <p>最近1分钟系统负载:<b>{{ deviceInfo[9]}}</b></p>
+            <p>最近5分钟系统负载:<b>{{ deviceInfo[10]}}</b></p>
+            <p>最近15分钟系统负载:<b>{{ deviceInfo[11]}}</b></p>
         {% endif %}
     </div>
 </div>

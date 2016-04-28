@@ -19,7 +19,7 @@ class Connect():
             return flag2
 
         elif flag == 1:
-            ssh.sendline("yes")
+            ssh.sendline("yes\n")
             flag = 0
 
         return {
@@ -38,6 +38,7 @@ class Connect():
     def server_info(self, name, host, passwd):
         self.ram_info(name, host, passwd)
         self.disk_info(name, host, passwd)
+        self.device_info(name, host, passwd)
         return self.SERVER_INFO
 
     def ram_info(self, name, host, passwd):
@@ -55,3 +56,12 @@ class Connect():
         if flag == 0:
             ssh.sendline(passwd)
             self.SERVER_INFO['disk_info'] = ssh.readlines()
+
+    def device_info(self, name, host, passwd):
+        cmd = 'ssh -t ' + name + '@' + host + ' uptime'
+        ssh = pexpect.spawn(cmd)
+        flag = ssh.expect(['password:'], timeout=10)
+        if flag == 0:
+            ssh.sendline(passwd)
+            self.SERVER_INFO['device_info'] = ssh.readlines()
+        pass
