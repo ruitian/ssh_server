@@ -42,7 +42,7 @@ class Connect():
         return self.SERVER_INFO
 
     def ram_info(self, name, host, passwd):
-        cmd = 'ssh -t ' + name + '@' + host + ' ' + 'free -h'
+        cmd = 'ssh -t ' + name + '@' + host + ' ' + 'free'
         ssh = pexpect.spawn(cmd)
         flag = ssh.expect(['password:'], timeout=10)
         if flag == 0:
@@ -64,4 +64,3 @@ class Connect():
         if flag == 0:
             ssh.sendline(passwd)
             self.SERVER_INFO['device_info'] = ssh.readlines()
-        pass
