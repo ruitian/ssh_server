@@ -4,31 +4,54 @@ import pexpect
 
 class Connect():
 
+    SERVER_INFO = {}
+
     def get_connect(self, name, host, passwd):
-        # cmd = 'ssh -t ' + name + '@' + host + ' ' + '"' + cmd + '"'
         cmd = 'ssh -t ' + name + '@' + host
         ssh = pexpect.spawn(cmd)
-        try:
-            flag = ssh.expect(
-                ['password:', 'continue connecting (yes/no)?'], timeout=10)
-            if flag == 0:
-                ssh.sendline(passwd)
-                flag2 = ssh.expect(['password:', '~#', '~$'])
-                return flag2
+        flag = ssh.expect(
+            ['password:', 'continue connecting (yes/no)?'], timeout=10)
+        if flag == 0:
+            ssh.sendline(passwd)
+            flag2 = ssh.expect(
+                ['password:', '~\$', '~#', pexpect.EOF, pexpect.TIMEOUT],
+                timeout=5)
+            return flag2
 
-            elif flag == 1:
-                ssh.sendline("yes")
-                flag = 0
+        elif flag == 1:
+            ssh.sendline("yes")
+            flag = 0
 
-            return {
-                'flag': flag
-            }
-        except pexpect.EOF:
-            print "EOF"
-            ssh.close()
-            ret = -1
-        except pexpect.TIMEOUT:
-            print "TIMEOUT"
-            ssh.close()
-            ret = -2
-        return ret
+        return {
+            'flag': flag
+        }
+
+    def use_command(self, name, host, passwd, cmd):
+        new_cmd = 'ssh -t ' + name + '@' + host + ' ' + '"' + cmd + '"'
+        ssh = pexpect.spawn(new_cmd)
+        flag = ssh.expect(
+            ['password:', 'continue connecting (yes/no)?'], timeout=10)
+        if flag == 0:
+            ssh.sendline(passwd)
+        return ssh.readlines()
+
+    def server_info(self, name, host, passwd):
+        self.ram_info(name, host, passwd)
+        self.disk_info(name, host, passwd)
+        return self.SERVER_INFO
+
+    def ram_info(self, name, host, passwd):
+        cmd = 'ssh -t ' + name + '@' + host + ' ' + 'free -h'
+        ssh = pexpect.spawn(cmd)
+        flag = ssh.expect(['password:'], timeout=10)
+        if flag == 0:
+            ssh.sendline(passwd)
+            self.SERVER_INFO['ram_info'] = ssh.readlines()
+
+    def disk_info(self, name, host, passwd):
+        cmd = 'ssh -t ' + name + '@' + host + ' ' + 'df -h'
+        ssh = pexpect.spawn(cmd)
+        flag = ssh.expect(['password:'], timeout=10)
+        if flag == 0:
+            ssh.sendline(passwd)
+            self.SERVER_INFO['disk_info'] = ssh.readlines()
