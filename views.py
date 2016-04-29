@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import sys
 from flask import render_template
 from flask import redirect
 from flask import request
@@ -8,6 +9,9 @@ from flask import flash
 
 from app import app
 from ssh import Connect
+
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -39,19 +43,6 @@ def deactive():
         session.pop('host')
         session.pop('passwd')
         return redirect(url_for('index'))
-
-
-@app.route('/<command>')
-def send_cmd(command):
-    results = send_and_get(command)
-    return render_template('index.html', results=results)
-
-
-def send_and_get(command):
-    con = Connect()
-    result = con.use_command(
-                session['name'], session['host'], session['passwd'], command)
-    return result
 
 
 @app.route('/server_info')
