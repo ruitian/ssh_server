@@ -11,7 +11,7 @@ RUN apt-get install uwsgi uwsgi-plugin-python -y
 RUN chown -R www-data:www-data /ssh
 RUN chown -R www-data:www-data /ssh
 
-RUN chown -R +x /ssh/setup.sh
+RUN chmod -R +x /ssh/setup.sh
 ADD default /etc/nginx/sites-available/default
 
 RUN pip install --upgrade pip
