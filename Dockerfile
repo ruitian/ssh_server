@@ -4,10 +4,10 @@ RUN mkdir /ssh
 WORKDIR /ssh
 COPY . /ssh
 
-apt-get update
-apt-get upgrade -y
-apt-get install nginx -y
-apt-get install uwsgi uwsgi-plugin-python -y
+RUN apt-get update
+RUN apt-get upgrade -y
+RUN apt-get install nginx -y
+RUN apt-get install uwsgi uwsgi-plugin-python -y
 RUN chown -R www-data:www-data /ssh
 RUN chown -R www-data:www-data /ssh
 
