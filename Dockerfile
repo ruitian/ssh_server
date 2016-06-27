@@ -1,4 +1,4 @@
-FROM python:2
+FROM python:2.7
 
 RUN mkdir /ssh
 WORKDIR /ssh
